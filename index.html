@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Trends in Different Age Groups</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #4682b4;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+        .container {
+            padding: 20px;
+        }
+        .section {
+            margin: 20px 0;
+        }
+        .accordion {
+            background-color: #eee;
+            border: none;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            outline: none;
+            transition: 0.4s;
+            margin-bottom: 10px;
+        }
+        .active, .accordion:hover {
+            background-color: #ccc;
+        }
+        .panel {
+            padding: 0 18px;
+            background-color: white;
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+        .chart-container {
+            margin: 20px 0;
+        }
+        .chart {
+            width: 60%;
+            height: 250px;
+        }
+        .footer {
+            background-color: #4682b4;
+            color: white;
+            text-align: center;
+            padding: 0.255em;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Social Trends in Different Age Groups</h1>
+    </div>
+    <div class="container">
+        <div class="section">
+            <button class="accordion">Generation Z (Born 1997-2012)</button>
+            <div class="panel">
+                <p>Digital natives, Gen Z are hyper-connected and value diversity, inclusivity, and sustainability. They prioritize experiences over things and are more open about mental health. Short attention spans mean content needs to be quick and engaging.
+
+</p>
+            </div>
+        </div>
+        <div class="section">
+            <button class="accordion">Millennials (Born 1981-1996)</button>
+            <div class="panel">
+                <p>Often called "digital natives," Millennials are tech-savvy and value work-life balance. They are entrepreneurial and seek meaningful work. This generation is brand loyal and appreciates authenticity.</p>
+            </div>
+        </div>
+        <div class="section">
+            <button class="accordion">Generation X (Born 1965-1980)</button>
+            <div class="panel">
+                <p>Independent and resourceful, Gen Xers are often seen as the "sandwich generation" balancing work, family, and aging parents. They value loyalty, hard work, and financial stability. They are practical and prefer direct communication.</p>
+            </div>
+        </div>
+        <div class="section">
+            <button class="accordion">Baby Boomers (Born 1946-1964)</button>
+            <div class="panel">
+                <p>Known for their optimism and work ethic, Baby Boomers are often retired or nearing retirement. They value family, tradition, and security. While tech-savvy varies, they appreciate clear and concise information.
+
+
+
+
+
+
+
+
+</p>
+            </div>
+        </div>
+        <div class="chart-container">
+            <h3>Social Media Usage by Age Group</h3>
+            <canvas id="barChart" class="chart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Preferred Social Media Platforms</h3>
+            <canvas id="pieChart" class="chart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Internet Usage Over Time</h3>
+            <canvas id="lineChart" class="chart"></canvas>
+        </div>
+    </div>
+    <div class="footer">
+        <p>With love from L.A.H.S</p>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var acc = document.getElementsByClassName("accordion");
+            for (var i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    var panel = this.nextElementSibling;
+                    if (panel.style.display === "block") {
+                        panel.style.display = "none";
+                    } else {
+                        panel.style.display = "block";
+                    }
+                });
+            }
+
+            // Data for charts
+            let socialMediaUsage = {
+                labels: ['Gen Z', 'Millennials', 'Gen X', 'Baby Boomers'],
+                data: [80, 40, 20, 10]
+            };
+
+            let preferredPlatforms = {
+                labels: ['Facebook', 'Instagram', 'Twitter', 'YouTube'],
+                data: [20, 65, 5, 10]
+            };
+
+            let internetUsage = {
+                labels: ['2010', '2012', '2014', '2016', '2018', '2020', '2022'],
+                data: [45, 50, 55, 70, 78, 90, 106]
+            };
+
+            // Function to generate bar chart
+            function createBarChart(data) {
+                const ctx = document.getElementById('barChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Social Media Usage (%)',
+                            data: data.data,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Function to generate pie chart
+            function createPieChart(data) {
+                const ctx = document.getElementById('pieChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.data,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(255, 99, 132, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.raw + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Function to generate line chart
+            function createLineChart(data) {
+                const ctx = document.getElementById('lineChart').getContext('2d');
+                return new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Internet Usage (%)',
+                            data: data.data,
+                            fill: false,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Create the charts
+            createBarChart(socialMediaUsage);
+            createPieChart(preferredPlatforms);
+            createLineChart(internetUsage);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
