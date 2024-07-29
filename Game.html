@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Usage Analysis Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .game-container {
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+        }
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .instructions {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .input-container {
+            margin: 20px 0;
+        }
+        .input-container input,
+        .input-container select,
+        .input-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .chart-container {
+            margin: 20px 0;
+        }
+        .chart {
+            width: 100%;
+            height: 400px;
+        }
+        .result {
+            display: none;
+            font-size: 20px;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="section active" id="introduction">
+            <div class="title">Welcome to the Social Media Usage Analysis Game</div>
+            <div class="instructions">Click the button below to start your journey in analyzing social media trends among students.</div>
+            <button class="button" onclick="nextSection('dataCollection')">Start</button>
+        </div>
+        <div class="section" id="dataCollection">
+            <div class="title">Data Collection</div>
+            <div class="instructions">Fill out the simulated survey to collect data on social media usage.</div>
+            <div class="input-container">
+                <label for="age">Age Group:</label>
+                <select id="age">
+                    <option value="under 13">Under 13</option>
+                    <option value="13-15">13-15</option>
+                    <option value="16-18">16-18</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <label for="platforms">Social Media Platforms Used:</label>
+                <input type="text" id="platforms" placeholder="e.g., Facebook, Instagram, TikTok">
+            </div>
+            <div class="input-container">
+                <label for="frequency">Frequency of Usage (hours per day):</label>
+                <input type="number" id="frequency" min="0" max="24" step="0.5">
+            </div>
+            <div class="input-container">
+                <label for="content">Preferred Types of Content:</label>
+                <textarea id="content" placeholder="e.g., videos, memes, news"></textarea>
+            </div>
+            <button class="button" onclick="collectData()">Submit</button>
+        </div>
+        <div class="section" id="dataCleaning">
+            <div class="title">Data Cleaning and Preprocessing</div>
+            <div class="instructions">Review and clean the collected data to prepare it for analysis.</div>
+            <div class="input-container">
+                <label for="cleanedData">Cleaned Data:</label>
+                <textarea id="cleanedData" placeholder="Review and clean the data here..."></textarea>
+            </div>
+            <button class="button" onclick="nextSection('eda')">Next</button>
+        </div>
+        <div class="section" id="eda">
+            <div class="title">Exploratory Data Analysis (EDA)</div>
+            <div class="instructions">Explore the data to identify trends and patterns in social media usage.</div>
+            <div class="chart-container">
+                <h3>Social Media Usage by Age Group</h3>
+                <canvas id="barChart" class="chart"></canvas>
+            </div>
+            <button class="button" onclick="nextSection('sentimentAnalysis')">Next</button>
+        </div>
+        <div class="section" id="sentimentAnalysis">
+            <div class="title">Sentiment Analysis</div>
+            <div class="instructions">Analyze sentiments associated with different social media platforms or types of content.</div>
+            <div class="input-container">
+                <label for="comment">Sample Comment:</label>
+                <textarea id="comment" placeholder="Enter a sample comment to analyze..."></textarea>
+            </div>
+            <button class="button" onclick="analyzeSentiment()">Analyze Sentiment</button>
+            <div class="result" id="sentimentResult">Sentiment: <span id="sentiment"></span></div>
+            <button class="button" onclick="nextSection('comparison')">Next</button>
+        </div>
+        <div class="section" id="comparison">
+            <div class="title">Comparison Across Age Groups</div>
+            <div class="instructions">Compare social media usage patterns between different age groups.</div>
+            <div class="chart-container">
+                <h3>Comparison of Social Media Usage</h3>
+                <canvas id="lineChart" class="chart"></canvas>
+            </div>
+            <button class="button" onclick="nextSection('impactAnalysis')">Next</button>
+        </div>
+        <div class="section" id="impactAnalysis">
+            <div class="title">Impact Analysis</div>
+            <div class="instructions">Discuss the potential impacts of social media usage on students.</div>
+            <div class="input-container">
+                <label for="impact">Potential Impacts:</label>
+                <textarea id="impact" placeholder="Discuss the potential impacts of social media usage..."></textarea>
+            </div>
+            <button class="button" onclick="nextSection('visualization')">Next</button>
+        </div>
+        <div class="section" id="visualization">
+            <div class="title">Visualization and Presentation</div>
+            <div class="instructions">Create visualizations and prepare a presentation of the findings.</div>
+            <div class="chart-container">
+                <h3>Final Summary</h3>
+                <canvas id="summaryChart" class="chart"></canvas>
+            </div>
+            <div class="result" id="finalResult">You have successfully completed the analysis!</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const sections = document.querySelectorAll('.section');
+        let data = [];
+
+        function nextSection(nextId) {
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(nextId).classList.add('active');
+        }
+
+        function collectData() {
+            const age = document.getElementById('age').value;
+            const platforms = document.getElementById('platforms').value;
+            const frequency = document.getElementById('frequency').value;
+            const content = document.getElementById('content').value;
+
+            data.push({ age, platforms, frequency, content });
+            alert('Data collected successfully!');
+            nextSection('dataCleaning');
+        }
+
+        function analyzeSentiment() {
+            const comment = document.getElementById('comment').value;
+            // Placeholder for sentiment analysis
+            const sentiment = comment.includes('good') ? 'Positive' : 'Negative';
+            document.getElementById('sentiment').innerText = sentiment;
+            document.getElementById('sentimentResult').style.display = 'block';
+        }
+
+        function createBarChart(data) {
+            const ctx = document.getElementById('barChart').getContext('2d');
+            return new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Social Media Usage (%)',
+                        data: data.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createLineChart(data) {
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Social Media Usage',
+                        data: data.data,
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createSummaryChart(data) {
+            const ctx = document.getElementById('summaryChart').getContext('2d');
+            return new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Social Media Summary',
+                        data: data.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+        }
+
+        // Dummy data for charts
+        const dummyBarData = {
+            labels: ['Under 13', '13-15', '16-18'],
+            data: [10, 20, 30]
+        };
+
+        const dummyLineData = {
+            labels: ['Under 13', '13-15', '16-18'],
+            data: [5, 15, 25]
+        };
+
+        const dummySummaryData = {
+            labels: ['Positive', 'Negative'],
+            data: [70, 30]
+        };
+
+        // Create charts
+        window.onload = function() {
+            createBarChart(dummyBarData);
+            createLineChart(dummyLineData);
+            createSummaryChart(dummySummaryData);
+        };
+    </script>
+</body>
+</html>
